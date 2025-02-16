@@ -1,10 +1,11 @@
 import * as JD from "decoders"
-import { Opaque, jsonValueCreate } from "../Opaque"
-import { Either, left, right, fromRight, mapEither } from "../Either"
-import { Maybe, throwIfNothing } from "../Maybe"
+import { Opaque, jsonValueCreate } from "../../Data/Opaque"
+import { Either, left, right, fromRight, mapEither } from "../../Data/Either"
+import { Maybe, throwIfNothing } from "../../Data/Maybe"
 
 const key: unique symbol = Symbol()
-/** Note: Adjust the logic to fit your project requirements */
+
+/** TODO Adjust the logic to fit your project requirements */
 export type Password = Opaque<string, typeof key>
 export type ErrorPassword =
   | "INVALID_LENGTH"

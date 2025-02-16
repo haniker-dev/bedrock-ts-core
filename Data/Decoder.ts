@@ -2,9 +2,15 @@ import * as JD from "decoders"
 import { Either, left, right } from "./Either"
 import { fromEither, Maybe } from "./Maybe"
 
-// Author of Decoders deliberately hide the Annotation type but we need it
-// so this is a hack to coaxe out the type
+/** Annotation type is not exported from decoders package
+ * hence, we have to do a sleight of hand to trick it out
+ */
 export type Annotation = Parameters<typeof JD.formatInline>[0]
+export function fromDecodeResult<T>(
+  result: JD.DecodeResult<T>,
+): Either<Annotation, T> {
+  return result.ok ? right(result.value) : left(result.error)
+}
 
 export const numberFromStringDecoder: JD.Decoder<number> = JD.string
   .transform(Number)

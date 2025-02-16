@@ -11,28 +11,16 @@ export type Api<
   Route extends string,
   UrlParams extends UrlRecord<Route>,
   RequestBody,
-  Response,
+  ErrorCode,
+  Payload,
 > = {
   method: M
   route: Route
   urlDecoder: JD.Decoder<UrlParams>
   bodyDecoder: JD.Decoder<RequestBody>
-  responseDecoder: (status: HttpStatus) => JD.Decoder<Response>
-}
-
-/** A more specialised API type for APIs without body params.
- * "GET" and "DELETE" APIs should not have body params
- */
-export type NoneBodyApi<
-  M extends Method,
-  Route extends string,
-  UrlParams extends UrlRecord<Route>,
-  Response,
-> = {
-  method: M
-  route: Route
-  urlDecoder: JD.Decoder<UrlParams>
-  responseDecoder: (status: HttpStatus) => JD.Decoder<Response>
+  responseDecoder: (
+    status: HttpStatus,
+  ) => JD.Decoder<ResponseJson<ErrorCode, Payload>>
 }
 
 export type Method = "GET" | "POST" | "PUT" | "DELETE" | "PATCH"
@@ -43,6 +31,11 @@ export type Ok200<D> = { _t: "Ok"; data: D }
 export type Err400<E> = { _t: "Err"; code: E | ApiError }
 export type InternalErr500 = { _t: "ServerError"; errorID: string }
 export type ResponseJson<E, D> = Ok200<D> | Err400<E> | InternalErr500
+
+export type NoUrlParams = Record<string, never>
+export type NoBodyParams = Record<string, never>
+export type NoErrorCode = null
+export type NoPayload = Record<string, never>
 
 export function responseDecoder<E, T>(
   errorDecoder: JD.Decoder<E>,
@@ -96,10 +89,7 @@ export const httpStatusDecoder: JD.Decoder<HttpStatus> = JD.oneOf([
   200, 400, 500,
 ])
 
-// Convenience
-
-export type NoUrlParams = Record<string, never>
-export type NoBodyParams = Record<string, never>
-
 export const noUrlParamsDecoder: JD.Decoder<NoUrlParams> = JD.always({})
 export const noBodyParamsDecoder: JD.Decoder<NoBodyParams> = JD.always({})
+export const noErrorCodeDecoder: JD.Decoder<NoErrorCode> = JD.null_
+export const noPayloadDecoder: JD.Decoder<NoPayload> = JD.always({})

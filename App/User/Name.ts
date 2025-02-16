@@ -1,8 +1,8 @@
 import * as JD from "decoders"
-import { Opaque, jsonValueCreate } from "../Opaque"
-import { Either, left, right, fromRight } from "../Either"
-import { Maybe, throwIfNothing } from "../Maybe"
-import { createText100 } from "../Text"
+import { Opaque, jsonValueCreate } from "../../Data/Opaque"
+import { Either, left, right, fromRight } from "../../Data/Either"
+import { Maybe, throwIfNothing } from "../../Data/Maybe"
+import { createText100 } from "../../Data/Text"
 
 const key: unique symbol = Symbol()
 export type Name = Opaque<string, typeof key>

@@ -13,7 +13,7 @@ export type Timestamp = Opaque<number, typeof key>
 export type ErrorTimestamp = "NOT_AN_INT" | "NOT_A_TIMESTAMP"
 
 export function createNow(): Timestamp {
-  return _create(epochSecondsNow())
+  return _create(_now())
 }
 
 export function fromDate(date: Date): Timestamp {
@@ -37,11 +37,11 @@ export function createTimestampE(n: number): Either<ErrorTimestamp, Timestamp> {
 }
 
 export function afterNow(t: Timestamp): boolean {
-  return epochSecondsNow() - t.unwrap() < 0
+  return _now() - t.unwrap() < 0
 }
 
 export function beforeNow(t: Timestamp): boolean {
-  return t.unwrap() - epochSecondsNow() < 0
+  return t.unwrap() - _now() < 0
 }
 
 export function diffTimestamp(t1: Timestamp, t2: Timestamp): number {
@@ -49,7 +49,7 @@ export function diffTimestamp(t1: Timestamp, t2: Timestamp): number {
 }
 
 export function diffFromNow(t1: Timestamp): number {
-  return t1.unwrap() - epochSecondsNow()
+  return t1.unwrap() - _now()
 }
 
 export function addSeconds(t1: Timestamp, seconds: PositiveInt): Timestamp {
@@ -82,8 +82,8 @@ export function isPastDay(day: Timestamp): boolean {
   return day_.getTime() < now.getTime()
 }
 
-function epochSecondsNow(): number {
-  return Math.floor(Date.now() / 1000)
+export function toDate(timestamp: Timestamp): Date {
+  return new Date(timestamp.unwrap())
 }
 
 export const timestampDecoder: JD.Decoder<Timestamp> = JD.number.transform(
@@ -91,6 +91,9 @@ export const timestampDecoder: JD.Decoder<Timestamp> = JD.number.transform(
     return throwIfNothing(createTimestamp(n), `Invalid timestamp: ${n}`)
   },
 )
+
+export const timestampDecoderFromDate: JD.Decoder<Timestamp> =
+  JD.date.transform((v) => fromDate(v))
 
 function _validate(n: number): Either<ErrorTimestamp, number> {
   return Number.isInteger(n) === false
@@ -100,10 +103,10 @@ function _validate(n: number): Either<ErrorTimestamp, number> {
       : right(n)
 }
 
-export function toDate(timestamp: Timestamp): Date {
-  return new Date(timestamp.unwrap())
+function _create(epochMS: number): Timestamp {
+  return jsonValueCreate<number, typeof key>(key)(Math.floor(epochMS))
 }
 
-function _create(epochSeconds: number): Timestamp {
-  return jsonValueCreate<number, typeof key>(key)(Math.floor(epochSeconds))
+function _now(): number {
+  return Date.now()
 }

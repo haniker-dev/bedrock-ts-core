@@ -1,5 +1,11 @@
 import { PositiveInt } from "./Number/PositiveInt"
 
+export function sleep(ms: number): Promise<void> {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms)
+  })
+}
+
 export function debounce<T extends unknown[]>(
   fn: (...args: T) => void,
   delayInMillis: number,

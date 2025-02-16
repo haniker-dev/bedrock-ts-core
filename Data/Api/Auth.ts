@@ -1,5 +1,5 @@
 import * as JD from "decoders"
-import { Api, HttpStatus, Method, NoneBodyApi } from "../Api"
+import { HttpStatus, Method } from "../Api"
 import { UrlRecord } from "../UrlToken"
 
 /** Auth APIs requires a request header "authorization: Bearer <JWT-Token>"
@@ -12,17 +12,17 @@ export type AuthApi<
   RequestBody,
   ErrorCode,
   Payload,
-> = Api<M, Route, UrlParams, RequestBody, AuthResponseJson<ErrorCode, Payload>>
+> = {
+  method: M
+  route: Route
+  urlDecoder: JD.Decoder<UrlParams>
+  bodyDecoder: JD.Decoder<RequestBody>
+  responseDecoder: (
+    status: HttpStatus,
+  ) => JD.Decoder<AuthResponseJson<ErrorCode, Payload>>
+}
 
-export type AuthNoneBodyApi<
-  M extends Method,
-  Route extends string,
-  UrlParams extends UrlRecord<Route>,
-  ErrorCode,
-  Payload,
-> = NoneBodyApi<M, Route, UrlParams, AuthResponseJson<ErrorCode, Payload>>
-
-export type AuthApiError = "PAYLOAD_TOO_LARGE" | "UNAUTHORIZED"
+export type AuthApiError = "UNAUTHORISED"
 export type AuthOk200<D> = { _t: "AuthOk"; data: D }
 export type AuthErr400<E> = { _t: "AuthErr"; code: E | AuthApiError }
 export type AuthInternalErr500 = { _t: "AuthServerError"; errorID: string }
@@ -76,6 +76,5 @@ export function authInternalErr500Decoder(): JD.Decoder<AuthInternalErr500> {
 }
 
 export const authApiErrorDecoder: JD.Decoder<AuthApiError> = JD.oneOf([
-  "PAYLOAD_TOO_LARGE",
-  "UNAUTHORIZED",
+  "UNAUTHORISED",
 ])

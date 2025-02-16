@@ -1,4 +1,4 @@
-import { createPassword } from "../../../Data/User/Password"
+import { createPassword } from "../../../App/User/Password"
 
 describe("Data/User/Password", () => {
   test("valid password", async () => {

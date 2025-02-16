@@ -28,7 +28,7 @@
     "eslint-config-prettier": "^9.1.0",
     "eslint-import-resolver-typescript": "^3.7.0",
     "eslint-plugin-boundaries": "^5.0.1",
-    "eslint-plugin-custom": "file:eslint-plugin-custom",
+    "eslint-plugin-custom": "file:./eslint-plugin-custom",
     "eslint-plugin-import": "^2.31.0",
     "eslint-plugin-prettier": "^5.2.3",
     "eslint-watch": "^8.0.0",

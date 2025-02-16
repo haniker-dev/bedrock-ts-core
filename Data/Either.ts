@@ -1,5 +1,4 @@
 import * as JD from "decoders"
-import type { DecodeResult } from "decoders"
 import { Maybe, just, nothing } from "./Maybe"
 
 export type Either<E, T> = Left<E> | Right<T>
@@ -61,15 +60,6 @@ export function fromRight<E, T>(result: Either<E, T>): Maybe<T> {
 
 export function fromLeft<E, T>(result: Either<E, T>): Maybe<E> {
   return result._t === "Left" ? just(result.error) : nothing()
-}
-
-/** Annotation type is not exported from decoders package
- * hence, we have to do a sleight of hand to trick it out
- */
-export function fromDecodeResult<T>(
-  result: DecodeResult<T>,
-): Either<Exclude<typeof result.error, undefined>, T> {
-  return result.ok ? right(result.value) : left(result.error)
 }
 
 /** Type inference for a JD.object({ t: JD.Decoder<T> }) is always { t: T | undefined }

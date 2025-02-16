@@ -10,7 +10,7 @@ export function createRefreshToken(): RefreshToken {
   return jsonValueCreate<string, typeof key>(key)(v6())
 }
 
-/** For frontend where we store the refresh token as string in local storage **/
+/** For client-side where we store the refresh token as string in local storage **/
 export function unsafeToRefreshToken(s: string): RefreshToken {
   return _create(s)
 }

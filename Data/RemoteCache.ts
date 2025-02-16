@@ -10,18 +10,18 @@ const key: unique symbol = Symbol()
 export type RemoteCache<P, E, T> = Opaque<
   RemoteCacheInternal<P, E, T>,
   typeof key,
-  State<E, T>
+  RemoteCacheState<E, T>
 >
 
 type RemoteCacheInternal<P, E, T> = {
   lastParam: Maybe<P>
   lastFetched: Timestamp
   expireInSeconds: Nat
-  state: State<E, T>
+  state: RemoteCacheState<E, T>
   fetchData: (p: P) => Promise<Either<E, T>>
 }
 
-export type State<E, T> =
+export type RemoteCacheState<E, T> =
   | RemoteData<E, T>
   | Refreshing<T>
   | FailedWithCache<E, T>
@@ -38,13 +38,13 @@ export function init<P, E, T>(
 
 export function getState<P, E, T>(
   remoteCache: RemoteCache<P, E, T>,
-): State<E, T> {
+): RemoteCacheState<E, T> {
   return remoteCache[key].state
 }
 
 /** BEWARE: updating state to "Loading" will clear any cached data of this RC instance */
 export function updateState<P, E, T>(
-  state: State<E, T>,
+  state: RemoteCacheState<E, T>,
   remoteCache: RemoteCache<P, E, T>,
 ): RemoteCache<P, E, T> {
   return updateState_(state, remoteCache)
@@ -131,7 +131,7 @@ function success<P, E, T>(
 }
 
 function updateState_<P, E, T>(
-  state: State<E, T>,
+  state: RemoteCacheState<E, T>,
   remoteCache: RemoteCache<P, E, T>,
 ): RemoteCache<P, E, T> {
   return {
@@ -166,7 +166,7 @@ function updateLastParamAndTime<P, E, T>(
 function create<P, E, T>(
   lastFetched: Timestamp,
   expireInSeconds: Nat,
-  state: State<E, T>,
+  state: RemoteCacheState<E, T>,
   fetchData: (p: P) => Promise<Either<E, T>>,
 ): RemoteCache<P, E, T> {
   return {

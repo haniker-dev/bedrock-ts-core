@@ -45,3 +45,18 @@ export function maybeDecoder<T>(
 ): JD.Decoder<Maybe<T>> {
   return JD.nullable(valueDecoder)
 }
+
+/** Decodes undefined as null */
+export function maybeOptionalDecoder<T>(
+  valueDecoder: JD.Decoder<T>,
+): JD.Decoder<Maybe<T>> {
+  return JD.optional(maybeDecoder(valueDecoder)).transform((m) => m ?? null)
+}
+
+export function stringMaybeDecoder<T>(
+  valueDecoder: JD.Decoder<T>,
+): JD.Decoder<Maybe<T>> {
+  return JD.string
+    .transform((s) => s.toLowerCase())
+    .transform((s) => (s === "null" ? null : valueDecoder.verify(s)))
+}
