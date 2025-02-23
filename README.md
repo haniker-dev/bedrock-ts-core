@@ -24,7 +24,7 @@ As this repo is meant to be imported for other repo, there is no `/src` folder.
 
 ## TypeFirst Principles and Conventions
 - Fully typed 
-  - Absolutely NO `any` type
+  - Absolutely NO `any` type and no usage of `as` and `is` type
   - No coercion of types (eg. `const user = unknownJson as User`)
   - unknown types are ALWAYS decoded using (decoders)[https://github.com/nvie/decoders]
   - Use `string | null` typing to reflect that something can be missing. Do not default!

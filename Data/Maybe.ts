@@ -4,7 +4,7 @@ import type { Either } from "./Either"
 /** This is just a sugar syntax for T | null
  * but the decoder is better
  * */
-export type Maybe<T> = T | Nothing
+export type Maybe<T> = T | null
 export type Just<T> = T
 export type Nothing = null
 
