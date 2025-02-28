@@ -1,5 +1,4 @@
 import { JSONValue } from "decoders"
-import { Maybe } from "./Maybe"
 
 /** An opaque type is a type where coders cannot create or edit it
  * thereby guaranteeing the integrity of the value
@@ -14,12 +13,17 @@ import { Maybe } from "./Maybe"
  * const key: unique symbol = Symbol()
  * type Email = Opaque<string, typeof key>
  * export function createEmailE(value: string): Either<Error, Email> {
- *   const validated = cleanEmail(value)
- *   return mapEither(validated, (email) => ({
- *     [key]: email,
- *     unwrap: () => email,
- *     toJSON: () => email,
- *   }))
+ *   const isValid = validateEmail(value)
+ *   if (isValue === true) {
+ *     const opaqueType = {
+ *       [key]: email,
+ *       unwrap: () => email,
+ *       toJSON: () => email,
+ *     }
+ *     return { _t: "Right", value: opaqueType }
+ *   } else {
+ *     return { _t: "Left", error: "INVALID_EMAIL"}
+ *   }
  * }
  *
  **/
@@ -30,65 +34,9 @@ export type Opaque<T, K extends symbol, Unwrapped = T> = {
   readonly toJSON: () => JSONValue
 }
 
-// Equality Functions
-// Because it depends on `unwrap()`,
-// Unwrapped type must be the same as T
-export function eq<T, K extends symbol>(
-  a: Opaque<T, K, T>,
-  b: Opaque<T, K, T>,
-): boolean {
-  return a.unwrap() === b.unwrap()
-}
-
-export function gt<T, K extends symbol>(
-  a: Opaque<T, K, T>,
-  b: Opaque<T, K, T>,
-): boolean {
-  return a.unwrap() > b.unwrap()
-}
-
-export function gte<T, K extends symbol>(
-  a: Opaque<T, K, T>,
-  b: Opaque<T, K, T>,
-): boolean {
-  return a.unwrap() >= b.unwrap()
-}
-
-export function lt<T, K extends symbol>(
-  a: Opaque<T, K, T>,
-  b: Opaque<T, K, T>,
-): boolean {
-  return a.unwrap() < b.unwrap()
-}
-
-export function lte<T, K extends symbol>(
-  a: Opaque<T, K, T>,
-  b: Opaque<T, K, T>,
-): boolean {
-  return a.unwrap() <= b.unwrap()
-}
-
-// Array Functions
-// Because it depends on `unwrap()`,
-// Unwrapped type must be the same as T
-export function find<T, K extends symbol>(
-  s: T,
-  xs: Array<Opaque<T, K, T>>,
-): Opaque<T, K, T> | null {
-  const [first, ...rest] = xs
-  if (first == null) {
-    return null
-  }
-
-  return first.unwrap() === s ? first : find(s, rest)
-}
-
-export function unwrapMaybe<T, K extends symbol, U>(
-  a: Maybe<Opaque<T, K, U>>,
-): Maybe<U> {
-  return a == null ? null : a.unwrap()
-}
-
+/**
+ * A factory to create opaque type if the wrapped value is a kind of JSONValue
+ */
 export function jsonValueCreate<T extends JSONValue, K extends symbol>(
   key: K,
 ): (v: T) => Opaque<T, K> {

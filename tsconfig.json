@@ -20,7 +20,8 @@
     "Api/**/*",
     "App/**/*",
     "Data/**/*",
-    "spec/**/*",
+    "Learn/**/*",
+    "spec/**/*"
   ],
   "exclude": ["node_modules"]
 }
