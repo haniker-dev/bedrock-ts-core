@@ -1,6 +1,6 @@
 import * as JD from "decoders"
 import { Either, fromRight, left, mapEither, right } from "../Either"
-import { Maybe, throwIfNothing } from "../Maybe"
+import { Maybe, throwIfNull } from "../Maybe"
 import { Opaque, jsonValueCreate } from "../Opaque"
 
 const key: unique symbol = Symbol()
@@ -44,12 +44,12 @@ export function createPositiveIntE(
 
 export const positiveIntDecoder: JD.Decoder<PositiveInt> = JD.number.transform(
   (n) => {
-    return throwIfNothing(createPositiveInt(n), `Invalid positive int: ${n}`)
+    return throwIfNull(createPositiveInt(n), `Invalid positive int: ${n}`)
   },
 )
 export const stringPositiveIntDecoder: JD.Decoder<PositiveInt> =
   JD.string.transform((n) => {
-    return throwIfNothing(
+    return throwIfNull(
       createPositiveInt(Number(n)),
       `Invalid string positive int: ${n}`,
     )

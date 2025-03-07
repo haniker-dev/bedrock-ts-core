@@ -5,19 +5,9 @@ import type { Either } from "./Either"
  * but the decoder is better
  * */
 export type Maybe<T> = T | null
-export type Just<T> = T
-export type Nothing = null
-
-export function just<T>(value: T): Just<T> {
-  return value
-}
-
-export function nothing(): Nothing {
-  return null
-}
 
 export function maybe<T>(value: T | null | undefined): Maybe<T> {
-  return value == null ? nothing() : just(value)
+  return value == null ? null : value
 }
 
 export function fromMaybe<T>(m: Maybe<T>): T | null {
@@ -25,14 +15,14 @@ export function fromMaybe<T>(m: Maybe<T>): T | null {
 }
 
 export function fromEither<E, T>(m: Either<E, T>): T | null {
-  return m._t === "Right" ? m.value : nothing()
+  return m._t === "Right" ? m.value : null
 }
 
 export function mapMaybe<A, B>(m: Maybe<A>, fn: (a: A) => B): Maybe<B> {
-  return m == null ? nothing() : fn(m)
+  return m == null ? null : fn(m)
 }
 
-export function throwIfNothing<T>(m: Maybe<T>, errorMsg: string): T {
+export function throwIfNull<T>(m: Maybe<T>, errorMsg: string): T {
   if (m == null) {
     throw new Error(errorMsg)
   }

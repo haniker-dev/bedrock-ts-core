@@ -1,5 +1,5 @@
 import * as JD from "decoders"
-import { Maybe, just, nothing } from "./Maybe"
+import { Maybe } from "./Maybe"
 
 export type Either<E, T> = Left<E> | Right<T>
 export type Left<E> = { readonly _t: "Left"; readonly error: E }
@@ -25,6 +25,8 @@ export function mapEither<E, A, B>(
     return right(fn(either.value))
   }
 }
+
+export const mapRight = mapEither
 
 export function mapLeft<E1, E2, A>(
   either: Either<E1, A>,
@@ -55,11 +57,11 @@ export function partition<E, T>(
 }
 
 export function fromRight<E, T>(result: Either<E, T>): Maybe<T> {
-  return result._t === "Right" ? just(result.value) : nothing()
+  return result._t === "Right" ? result.value : null
 }
 
 export function fromLeft<E, T>(result: Either<E, T>): Maybe<E> {
-  return result._t === "Left" ? just(result.error) : nothing()
+  return result._t === "Left" ? result.error : null
 }
 
 /** Type inference for a JD.object({ t: JD.Decoder<T> }) is always { t: T | undefined }

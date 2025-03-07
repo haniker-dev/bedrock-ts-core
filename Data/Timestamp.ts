@@ -1,14 +1,12 @@
 import * as JD from "decoders"
 import { Opaque, jsonValueCreate } from "./Opaque"
 import { Either, fromRight, left, mapEither, right } from "./Either"
-import { Maybe, throwIfNothing } from "./Maybe"
+import { Maybe, throwIfNull } from "./Maybe"
 import { Nat } from "./Number/Nat"
 import { PositiveInt } from "./Number/PositiveInt"
 
 const key: unique symbol = Symbol()
-/** Timestamp is epoch milliseconds
- * TODO We need Time/Second.ts, etc types
- * */
+/** Timestamp is epoch milliseconds */
 export type Timestamp = Opaque<number, typeof key>
 export type ErrorTimestamp = "NOT_AN_INT" | "NOT_A_TIMESTAMP"
 
@@ -88,7 +86,7 @@ export function toDate(timestamp: Timestamp): Date {
 
 export const timestampDecoder: JD.Decoder<Timestamp> = JD.number.transform(
   (n) => {
-    return throwIfNothing(createTimestamp(n), `Invalid timestamp: ${n}`)
+    return throwIfNull(createTimestamp(n), `Invalid timestamp: ${n}`)
   },
 )
 

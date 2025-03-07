@@ -1,7 +1,7 @@
 import * as JD from "decoders"
 import { Opaque, jsonValueCreate } from "../../Data/Opaque"
 import { Either, left, right, fromRight } from "../../Data/Either"
-import { Maybe, throwIfNothing } from "../../Data/Maybe"
+import { Maybe, throwIfNull } from "../../Data/Maybe"
 import { createText100 } from "../../Data/Text"
 
 const key: unique symbol = Symbol()
@@ -20,5 +20,5 @@ export function createNameE(s: string): Either<ErrorName, Name> {
 }
 
 export const nameDecoder: JD.Decoder<Name> = JD.string.transform((s) => {
-  return throwIfNothing(createName(s), `Invalid name: ${s}`)
+  return throwIfNull(createName(s), `Invalid name: ${s}`)
 })

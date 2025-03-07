@@ -1,6 +1,6 @@
 import * as JD from "decoders"
 import { Either, left, right, fromRight, mapEither } from "./Either"
-import { Maybe, throwIfNothing } from "./Maybe"
+import { Maybe, throwIfNull } from "./Maybe"
 import { Opaque, jsonValueCreate } from "./Opaque"
 
 type Text<T extends symbol> = Opaque<string, T>
@@ -162,7 +162,7 @@ function _decoder<T extends symbol>(
   textLength: number,
 ): JD.Decoder<Text<T>> {
   return JD.string.transform((s) => {
-    return throwIfNothing(
+    return throwIfNull(
       _create(key, textLength, s),
       `Invalid ${key.toString()}: ${s}`,
     )

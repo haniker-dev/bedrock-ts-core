@@ -11,6 +11,7 @@ export function unsnoc<T>(xs: T[]): Maybe<{ init: T[]; last: T }> {
   return last == null ? null : { init, last }
 }
 
+/** Consider using a set if possible */
 export function uniqueBy<T, K>(array: T[], compareValue: (item: T) => K): T[] {
   return array.reduce((acc: T[], item) => {
     const value = compareValue(item)
@@ -19,11 +20,4 @@ export function uniqueBy<T, K>(array: T[], compareValue: (item: T) => K): T[] {
     }
     return acc
   }, [])
-}
-
-export function removeNull<T>(array: Maybe<T>[]): T[] {
-  return array.reduce(
-    (acc: T[], curr) => (curr == null ? acc : [...acc, curr]),
-    [],
-  )
 }

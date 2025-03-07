@@ -1,7 +1,7 @@
 import * as JD from "decoders"
 import { Opaque, jsonValueCreate } from "../Opaque"
 import { Either, left, right, fromRight, mapEither } from "../Either"
-import { Maybe, throwIfNothing } from "../Maybe"
+import { Maybe, throwIfNull } from "../Maybe"
 
 const key: unique symbol = Symbol()
 /** Max email length is 320 as per RFC 5321 and RFC 5322
@@ -18,7 +18,7 @@ export function createEmailE(s: string): Either<ErrorEmail, Email> {
 }
 
 export const emailDecoder: JD.Decoder<Email> = JD.string.transform((s) => {
-  return throwIfNothing(createEmail(s), `Invalid email: ${s}`)
+  return throwIfNull(createEmail(s), `Invalid email: ${s}`)
 })
 
 function _validate(s: string): Either<ErrorEmail, string> {

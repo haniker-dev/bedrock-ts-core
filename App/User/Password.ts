@@ -1,11 +1,11 @@
 import * as JD from "decoders"
 import { Opaque, jsonValueCreate } from "../../Data/Opaque"
 import { Either, left, right, fromRight, mapEither } from "../../Data/Either"
-import { Maybe, throwIfNothing } from "../../Data/Maybe"
+import { Maybe, throwIfNull } from "../../Data/Maybe"
 
 const key: unique symbol = Symbol()
 
-/** TODO Adjust the logic to fit your project requirements */
+/** NOTE: Adjust the logic to fit your project requirements */
 export type Password = Opaque<string, typeof key>
 export type ErrorPassword =
   | "INVALID_LENGTH"
@@ -24,7 +24,7 @@ export function createPasswordE(s: string): Either<ErrorPassword, Password> {
 
 export const passwordDecoder: JD.Decoder<Password> = JD.string.transform(
   (s) => {
-    return throwIfNothing(createPassword(s), `Invalid password: ${s}`)
+    return throwIfNull(createPassword(s), `Invalid password: ${s}`)
   },
 )
 

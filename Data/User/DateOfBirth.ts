@@ -1,7 +1,7 @@
 import * as JD from "decoders"
 import { Opaque } from "../../Data/Opaque"
 import { Either, fromRight, left, right } from "../../Data/Either"
-import { Maybe, throwIfNothing } from "../../Data/Maybe"
+import { Maybe, throwIfNull } from "../../Data/Maybe"
 import { parse } from "date-fns"
 import { Nat, natDecoder } from "../../Data/Number/Nat"
 import { fromDate, Timestamp } from "../Timestamp"
@@ -146,7 +146,7 @@ export const dateOfBirthDecoder: JD.Decoder<DateOfBirth> = JD.string.transform(
     const year = natDecoder.verify(parseInt(yearM))
     const month = monthDecoder.verify(monthM)
     const day = dayDecoder.verify(dayM)
-    return throwIfNothing(
+    return throwIfNull(
       createDateOfBirth(year, month, day),
       `Invalid DateOfBirth: ${s}`,
     )
