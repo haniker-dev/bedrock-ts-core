@@ -77,9 +77,7 @@ As this repo is meant to be imported for other repo, there is no `/src` folder.
 
 ## TODO
 - Timestamp: We need Time/Second.ts, etc types
-- Linting for !
 - Remove -1 for TextNoLimit
-- Extract bedrock eslint plugin to npm
 
 ## Enhancement
 - Enforce no throw

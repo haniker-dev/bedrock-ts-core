@@ -9,7 +9,7 @@
     "plugin:@typescript-eslint/recommended",
     "prettier"
   ],
-  "plugins": ["@typescript-eslint", "prettier", "boundaries", "custom"],
+  "plugins": ["@typescript-eslint", "prettier", "boundaries"],
   "rules": {
     "@typescript-eslint/prefer-as-const": 0,
     "import/no-cycle": "error",
@@ -23,7 +23,20 @@
         "caughtErrorsIgnorePattern": "^_"
       }
     ],
-    "custom/no-as": "error",
-    "custom/no-is": "error"
+    "no-restricted-syntax": [
+      "error",
+      {
+        "selector": "TSNonNullExpression",
+        "message": "Non-null assertions (`!`) are not allowed. Please use optional chaining or proper type checks."
+      },
+      {
+        "selector": "TSAsExpression",
+        "message": "Type assertions (`as`) are not allowed. Use explicit type annotations instead."
+      },
+      {
+        "selector": "TSTypePredicate",
+        "message": "Type predicates (`is`) are not allowed. Use boolean return types instead."
+      }
+    ]
   }
 }
