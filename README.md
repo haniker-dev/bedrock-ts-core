@@ -77,7 +77,6 @@ As this repo is meant to be imported for other repo, there is no `/src` folder.
 
 ## TODO
 - Timestamp: We need Time/Second.ts, etc types
-- Remove -1 for TextNoLimit
 
 ## Enhancement
 - Enforce no throw

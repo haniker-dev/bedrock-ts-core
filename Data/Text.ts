@@ -112,7 +112,13 @@ export const {
   create: createTextNoLimit,
   createE: createTextNoLimitE,
   decoder: textNoLimitDecoder,
-} = _createFactory(keyNoLimit, -1)
+} = {
+  create: (s: string) =>
+    JD.nonEmptyString.value(s) == null ? left("EMPTY_TEXT") : right(s),
+  createE: (s: string) =>
+    JD.nonEmptyString.value(s) == null ? left("EMPTY_TEXT") : right(s),
+  decoder: JD.nonEmptyString,
+}
 
 // Internal
 
