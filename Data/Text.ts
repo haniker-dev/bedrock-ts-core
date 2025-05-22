@@ -108,17 +108,19 @@ export const {
 const keyNoLimit: unique symbol = Symbol()
 /** TextNoLimit does not allow empty string */
 export type TextNoLimit = Text<typeof keyNoLimit>
-export const {
-  create: createTextNoLimit,
-  createE: createTextNoLimitE,
-  decoder: textNoLimitDecoder,
-} = {
-  create: (s: string) =>
-    JD.nonEmptyString.value(s) == null ? left("EMPTY_TEXT") : right(s),
-  createE: (s: string) =>
-    JD.nonEmptyString.value(s) == null ? left("EMPTY_TEXT") : right(s),
-  decoder: JD.nonEmptyString,
+export function createTextNoLimitE(
+  s: string,
+): Either<"EMPTY_TEXT", TextNoLimit> {
+  return s === ""
+    ? left("EMPTY_TEXT")
+    : right(jsonValueCreate<string, typeof keyNoLimit>(keyNoLimit)(s))
 }
+export function createTextNoLimit(s: string): TextNoLimit | null {
+  return fromRight(createTextNoLimitE(s))
+}
+export const textNoLimitDecoder: JD.Decoder<TextNoLimit> = JD.string.transform(
+  (s) => throwIfNull(createTextNoLimit(s), "EMPTY_TEXT"),
+)
 
 // Internal
 
